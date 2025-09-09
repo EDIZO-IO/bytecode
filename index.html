@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Byte Code by Edizo - Premium digital services including app development, website development, video editing, and graphics design. Transform your ideas into reality." />
+    <meta name="keywords" content="app development, website development, video editing, graphics design, digital services, mobile apps, web development" />
+    <meta name="author" content="Byte Code by Edizo" />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Byte Code by Edizo - Premium Digital Solutions" />
+    <meta property="og:description" content="Crafting exceptional digital experiences through innovative app development, web solutions, video editing, and graphic design." />
+    <meta property="og:type" content="website" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Byte Code by Edizo - Premium Digital Solutions" />
+    <meta name="twitter:description" content="Crafting exceptional digital experiences through innovative app development, web solutions, video editing, and graphic design." />
+    
+    <title>Byte Code by Edizo - Premium Digital Solutions</title>
+    
+    <!-- Preload critical fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <style>
+      /* Prevent flash of unstyled content */
+      html {
+        visibility: hidden;
+        opacity: 0;
+      }
+      
+      html.loaded {
+        visibility: visible;
+        opacity: 1;
+        transition: opacity 0.3s;
+      }
+      
+      /* Custom animation delays */
+      .animation-delay-2000 {
+        animation-delay: 2s;
+      }
+      
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Remove loading class once page is loaded
+      window.addEventListener('load', function() {
+        document.documentElement.classList.add('loaded');
+      });
+    </script>
+  </body>
+</html>
