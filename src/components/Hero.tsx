@@ -1,5 +1,4 @@
 // src/components/Hero.js
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, Zap } from 'lucide-react';
@@ -64,7 +63,7 @@ const Hero = () => {
           >
             <Sparkles className="h-5 w-5 text-yellow-400" />
             <span className="text-sm font-medium text-slate-300 bg-slate-800/50 px-3 py-1 rounded-full border border-slate-700">
-              Premium Digital Solutions
+              Your Gateway to Top Grades
             </span>
             <Sparkles className="h-5 w-5 text-yellow-400" />
           </motion.div>
@@ -89,11 +88,11 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8 }}
           >
-            Crafting exceptional digital experiences through innovative
-            <span className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text"> app development</span>,
-            <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text"> web solutions</span>,
-            <span className="text-transparent bg-gradient-to-r from-pink-400 to-cyan-400 bg-clip-text"> video editing</span>, and
-            <span className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text"> graphic design</span>.
+            Empowering students with cutting-edge projects in
+            <span className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text"> AI & ML</span>,
+            <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text"> IoT Systems</span>,
+            <span className="text-transparent bg-gradient-to-r from-pink-400 to-cyan-400 bg-clip-text"> Web Applications</span>, and
+            <span className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text"> Cyber Security</span>.
           </motion.p>
 
           <motion.div
@@ -109,21 +108,21 @@ const Hero = () => {
               whileTap={{ scale: 0.95 }}
             >
               <span className="flex items-center space-x-2">
-                <span>Get Started</span>
+                <span>Start Your Project</span>
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-purple-700 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </MotionLink>
 
             <MotionLink
-              to="/app-development"
+              to="/ai-ml-projects"
               className="group px-8 py-4 border-2 border-slate-600 rounded-full text-slate-300 font-semibold hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               <span className="flex items-center space-x-2">
                 <Zap className="h-5 w-5" />
-                <span>View Portfolio</span>
+                <span>View Projects</span>
               </span>
             </MotionLink>
           </motion.div>

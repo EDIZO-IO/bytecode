@@ -1,12 +1,12 @@
 // src/App.jsx
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './components/Home';
-import AppDevelopment from './components/AppDevelopment';
-import WebsiteDevelopment from './components/WebsiteDevelopment';
-import VideoEditing from './components/VideoEditing';
-import GraphicsDesign from './components/GraphicsDesign';
+import AIMLProjects from './components/AIMLProjects';
+import IOTProjects from './components/IOTProjects';
+import WebApplicationProjects from './components/WebApplicationProjects';
+import CyberSecurityProjects from './components/CyberSecurityProjects';
+import Profile from './components/Profile';
 import About from './components/About';
 import Contact from './components/Contact';
 import ProjectDetails from './components/ProjectDetails';
@@ -19,10 +19,11 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/app-development" element={<AppDevelopment />} />
-          <Route path="/website-development" element={<WebsiteDevelopment />} />
-          <Route path="/video-editing" element={<VideoEditing />} />
-          <Route path="/graphics-design" element={<GraphicsDesign />} />
+          <Route path="/ai-ml-projects" element={<AIMLProjects />} />
+          <Route path="/iot-projects" element={<IOTProjects />} />
+          <Route path="/web-application-projects" element={<WebApplicationProjects />} />
+          <Route path="/cyber-security-projects" element={<CyberSecurityProjects />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/project/:projectId" element={<ProjectDetails />} />

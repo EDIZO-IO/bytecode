@@ -1,8 +1,8 @@
 // src/components/Header.js
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Menu, X, Code2 } from 'lucide-react';
+import { Menu, X, Code2, User } from 'lucide-react';
 
 const MotionLink = motion(Link);
 
@@ -18,10 +18,11 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navItems = ['Home', 'App Development', 'Website Development', 'Video Editing', 'Graphics Design', 'About', 'Contact'];
+  const navItems = ['Home', 'AI/ML Projects', 'IOT Projects', 'Web Application Projects', 'Cyber Security Projects', 'About', 'Contact'];
 
-  const getPath = (item) => {
+  const getPath = (item: string) => {
     if (item === 'Home') return '/';
+    if (item === 'AI/ML Projects') return '/ai-ml-projects';
     return `/${item.toLowerCase().replace(/\s+/g, '-')}`;
   };
 
@@ -66,7 +67,7 @@ const Header = () => {
           </MotionLink>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex items-center space-x-8">
             {navItems.map((item, index) => (
               <MotionLink
                 key={item}
@@ -81,6 +82,19 @@ const Header = () => {
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400 group-hover:w-full transition-all duration-300"></span>
               </MotionLink>
             ))}
+            
+            {/* User Icon */}
+            <MotionLink
+              to="/profile"
+              className="p-2 rounded-full bg-slate-800/50 backdrop-blur-sm border border-slate-700 hover:border-slate-600 transition-all duration-200 group"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: navItems.length * 0.1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <User className="h-5 w-5 text-slate-300 group-hover:text-cyan-400 transition-colors" />
+            </MotionLink>
           </nav>
 
           {/* Mobile menu button */}
@@ -118,6 +132,19 @@ const Header = () => {
                   {item}
                 </MotionLink>
               ))}
+              
+              {/* Mobile User Icon */}
+              <MotionLink
+                to="/profile"
+                className="flex items-center space-x-3 text-slate-300 hover:text-cyan-400 transition-colors duration-200 py-2"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: navItems.length * 0.1 }}
+                onClick={() => setIsOpen(false)}
+              >
+                <User className="h-5 w-5" />
+                <span>Profile</span>
+              </MotionLink>
             </nav>
           </motion.div>
         )}

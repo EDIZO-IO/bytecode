@@ -1,44 +1,43 @@
 // src/components/Services.js
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Smartphone, Globe, Video, Palette, ArrowRight } from 'lucide-react';
+import { Code, FileText, Presentation, BookOpen, ArrowRight } from 'lucide-react';
 
 const MotionLink = motion(Link);
 
 const Services = () => {
   const services = [
     {
-      icon: Smartphone,
-      title: 'App Development',
-      description: 'Native and cross-platform mobile applications built with cutting-edge technologies for iOS and Android.',
-      features: ['React Native', 'Flutter', 'Native iOS/Android', 'API Integration'],
-      color: 'from-blue-500 to-cyan-500',
-      path: '/app-development'
+      icon: Code,
+      title: 'Complete Code Development',
+      description: 'Full-stack development services with clean, well-commented code across AI/ML, IoT, Web Applications, and Cyber Security projects.',
+      features: ['Source Code', 'Database Design', 'API Integration', 'Testing & Debugging'],
+      color: 'from-cyan-500 to-blue-500',
+      path: '/contact'
     },
     {
-      icon: Globe,
-      title: 'Website Development',
-      description: 'Modern, responsive websites and web applications that deliver exceptional user experiences.',
-      features: ['React/Next.js', 'E-commerce', 'CMS Integration', 'SEO Optimization'],
-      color: 'from-purple-500 to-pink-500',
-      path: '/website-development'
-    },
-    {
-      icon: Video,
-      title: 'Video Editing',
-      description: 'Professional video production and post-production services for brands and content creators.',
-      features: ['Motion Graphics', 'Color Grading', 'Audio Mixing', 'Visual Effects'],
-      color: 'from-orange-500 to-red-500',
-      path: '/video-editing'
-    },
-    {
-      icon: Palette,
-      title: 'Graphics Design',
-      description: 'Creative visual solutions including branding, UI/UX design, and marketing materials.',
-      features: ['Brand Identity', 'UI/UX Design', 'Print Design', 'Digital Marketing'],
+      icon: FileText,
+      title: 'Technical Documentation',
+      description: 'Comprehensive documentation including setup guides, API references, user manuals, and technical specifications for all projects.',
+      features: ['Setup Instructions', 'API Documentation', 'User Manuals', 'Technical Specs'],
       color: 'from-green-500 to-teal-500',
-      path: '/graphics-design'
+      path: '/contact'
+    },
+    {
+      icon: Presentation,
+      title: 'PowerPoint Presentations',
+      description: 'Professional presentation slides for project demonstrations, thesis defense, and academic presentations with modern designs.',
+      features: ['Project Overview', 'Technical Slides', 'Results & Analysis', 'Q&A Preparation'],
+      color: 'from-purple-500 to-pink-500',
+      path: '/contact'
+    },
+    {
+      icon: BookOpen,
+      title: 'Research Papers',
+      description: 'High-quality research papers and publications ready for academic journals, conferences, and thesis submissions.',
+      features: ['Literature Review', 'Methodology', 'Results Analysis', 'Citation Formatting'],
+      color: 'from-orange-500 to-red-500',
+      path: '/contact'
     }
   ];
 
@@ -63,7 +62,7 @@ const Services = () => {
             </span>
           </h2>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            We provide comprehensive digital solutions to transform your ideas into reality
+            Complete academic support services to help you achieve top grades with professional-quality deliverables
           </p>
         </motion.div>
 
