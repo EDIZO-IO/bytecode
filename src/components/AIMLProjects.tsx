@@ -1,48 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Brain, Database, BarChart3, Cpu, Target, Zap } from 'lucide-react';
+import { Brain, Database, BarChart3, Cpu, Target, Zap, Loader2 } from 'lucide-react';
+import { useScrollToTop } from '../hooks/useScrollToTop';
+import { useProjects } from '../hooks/useProjects';
 
 const AIMLProjects = () => {
-  const projects = [
-    {
-      id: 1,
-      title: 'Predictive Analytics Dashboard',
-      description: 'Machine learning model for predicting customer behavior and sales trends with real-time visualization.',
-      technologies: ['Python', 'TensorFlow', 'React', 'D3.js'],
-      features: ['Real-time predictions', 'Interactive charts', 'Data preprocessing', 'Model training'],
-      image: 'https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      category: 'Machine Learning'
-    },
-    {
-      id: 2,
-      title: 'Computer Vision System',
-      description: 'AI-powered image recognition system for quality control in manufacturing processes.',
-      technologies: ['OpenCV', 'PyTorch', 'Flask', 'Docker'],
-      features: ['Object detection', 'Quality assessment', 'Real-time processing', 'API integration'],
-      image: 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      category: 'Computer Vision'
-    },
-    {
-      id: 3,
-      title: 'Natural Language Processing API',
-      description: 'Advanced NLP service for sentiment analysis, text classification, and language translation.',
-      technologies: ['BERT', 'Transformers', 'FastAPI', 'PostgreSQL'],
-      features: ['Sentiment analysis', 'Text classification', 'Language detection', 'RESTful API'],
-      image: 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      category: 'NLP'
-    },
-    {
-      id: 4,
-      title: 'Recommendation Engine',
-      description: 'Personalized recommendation system using collaborative filtering and deep learning.',
-      technologies: ['Scikit-learn', 'Pandas', 'Redis', 'Node.js'],
-      features: ['User profiling', 'Item similarity', 'Real-time recommendations', 'A/B testing'],
-      image: 'https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      category: 'Recommendation Systems'
-    }
-  ];
+  // Scroll to top when component mounts
+  useScrollToTop();
 
-  const categories = ['All', 'Machine Learning', 'Computer Vision', 'NLP', 'Recommendation Systems'];
+  const { projects, categories, loading, error, fetchProjectsByCategory } = useProjects();
+
+  // Filter projects for AI/ML Projects category
+  useEffect(() => {
+    const aiMlCategory = categories.find(cat => cat.name === 'AI/ML Projects');
+    if (aiMlCategory) {
+      fetchProjectsByCategory(aiMlCategory.id);
+    }
+  }, [categories, fetchProjectsByCategory]);
+
+  // Transform projects to match the expected format
+  const transformedProjects = projects.map(project => ({
+    id: project.id,
+    title: project.title,
+    description: project.description,
+    technologies: project.technologies ? project.technologies.split(',') : [],
+    features: project.features ? project.features.split(',') : [],
+    image: project.media_url,
+    category: project.category_name,
+    external_url: project.external_url,
+    github_url: project.github_url
+  }));
 
   return (
     <div className="min-h-screen bg-slate-900 text-white pt-20">
@@ -109,8 +96,36 @@ const AIMLProjects = () => {
             </p>
           </motion.div>
 
+          {/* Loading State */}
+          {loading && (
+            <div className="flex justify-center items-center py-20">
+              <div className="flex items-center space-x-3">
+                <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+                <span className="text-xl text-slate-300">Loading AI/ML projects...</span>
+              </div>
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && (
+            <div className="flex justify-center items-center py-20">
+              <div className="text-center">
+                <div className="text-red-400 text-xl mb-4">⚠️ Error loading projects</div>
+                <p className="text-slate-300 mb-4">{error}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-3 rounded-full font-medium hover:from-cyan-600 hover:to-purple-700 transition-all duration-300"
+                >
+                  Retry
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Projects Grid */}
+          {!loading && !error && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projects.map((project, index) => (
+              {transformedProjects.map((project, index) => (
               <motion.div
                 key={project.id}
                 className="group relative bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl overflow-hidden hover:border-slate-600 transition-all duration-300"
@@ -172,6 +187,7 @@ const AIMLProjects = () => {
               </motion.div>
             ))}
           </div>
+          )}
         </div>
       </section>
 

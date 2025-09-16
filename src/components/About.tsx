@@ -2,8 +2,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Award, Users, Clock, Zap } from 'lucide-react';
+import { useScrollToTop } from '../hooks/useScrollToTop';
 
 const About = () => {
+  // Scroll to top when component mounts
+  useScrollToTop();
+
   const stats = [
     { icon: Award, value: '50+', label: 'Projects Completed' },
     { icon: Users, value: '30+', label: 'Happy Clients' },

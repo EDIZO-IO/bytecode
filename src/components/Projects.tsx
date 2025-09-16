@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Github, Play, Pause, Volume2, VolumeX, Maximize2 } from 'lucide-react';
+import { ExternalLink, Github, Play, Pause, Volume2, VolumeX, Maximize2, Loader2 } from 'lucide-react';
+import { useProjects } from '../hooks/useProjects';
+import { Project as ProjectType } from '../services/api';
 
 const Project = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -8,114 +10,36 @@ const Project = () => {
   const [mutedVideos, setMutedVideos] = useState<Set<number>>(new Set());
   const [fullscreenMedia, setFullscreenMedia] = useState<number | null>(null);
   
-  const categories = ['All', 'Apps', 'Websites', 'Videos', 'Graphics'];
-  
-  const projects = [
-    {
-      id: 1,
-      title: 'E-Commerce Mobile App',
-      category: 'Apps',
-      description: 'Full-featured shopping app with payment integration',
-      media: 'https://images.pexels.com/photos/4050320/pexels-photo-4050320.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      technologies: ['React Native', 'Node.js', 'Stripe'],
-      type: 'image',
-      aspectRatio: 'aspect-[4/5]'
-    },
-    {
-      id: 2,
-      title: 'Corporate Website Redesign',
-      category: 'Websites',
-      description: 'Modern, responsive website for tech startup',
-      media: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      technologies: ['React', 'Tailwind', 'Framer Motion'],
-      type: 'image',
-      aspectRatio: 'aspect-video'
-    },
-    {
-      id: 3,
-      title: 'Product Launch Campaign',
-      category: 'Videos',
-      description: 'Cinematic product showcase with motion graphics',
-      media: 'https://videos.pexels.com/video-files/3945313/3945313-uhd_2560_1440_30fps.mp4',
-      technologies: ['After Effects', 'Premiere Pro', '3D Animation'],
-      type: 'video',
-      aspectRatio: 'aspect-video'
-    },
-    {
-      id: 4,
-      title: 'Brand Identity System',
-      category: 'Graphics',
-      description: 'Complete brand package with logo and guidelines',
-      media: 'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      technologies: ['Illustrator', 'Photoshop', 'Figma'],
-      type: 'image',
-      aspectRatio: 'aspect-square'
-    },
-    {
-      id: 5,
-      title: 'Corporate Documentary',
-      category: 'Videos',
-      description: 'Professional company story and culture video',
-      media: 'https://videos.pexels.com/video-files/3196284/3196284-uhd_2560_1440_30fps.mp4',
-      technologies: ['Cinema Camera', 'DaVinci Resolve', 'Motion Graphics'],
-      type: 'video',
-      aspectRatio: 'aspect-video'
-    },
-    {
-      id: 6,
-      title: 'Fitness App Interface',
-      category: 'Apps',
-      description: 'Health and fitness app with social features',
-      media: 'https://images.pexels.com/photos/4050320/pexels-photo-4050320.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      technologies: ['Flutter', 'Firebase', 'HealthKit'],
-      type: 'image',
-      aspectRatio: 'aspect-[4/5]'
-    },
-    {
-      id: 7,
-      title: 'Marketing Campaign Graphics',
-      category: 'Graphics',
-      description: 'Social media and print marketing materials',
-      media: 'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      technologies: ['Photoshop', 'Illustrator', 'InDesign'],
-      type: 'image',
-      aspectRatio: 'aspect-[3/4]'
-    },
-    {
-      id: 8,
-      title: 'Event Highlight Reel',
-      category: 'Videos',
-      description: 'Dynamic event coverage with drone footage',
-      media: 'https://videos.pexels.com/video-files/2278095/2278095-uhd_2560_1440_30fps.mp4',
-      technologies: ['Drone Cinematography', 'Final Cut Pro', 'Color Grading'],
-      type: 'video',
-      aspectRatio: 'aspect-video'
-    },
-    {
-      id: 9,
-      title: 'Restaurant Website',
-      category: 'Websites',
-      description: 'Elegant restaurant website with online ordering',
-      media: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      technologies: ['Next.js', 'Sanity CMS', 'Stripe'],
-      type: 'image',
-      aspectRatio: 'aspect-video'
-    },
-    {
-      id: 10,
-      title: 'Logo Design Collection',
-      category: 'Graphics',
-      description: 'Creative logo designs for various industries',
-      media: 'https://images.pexels.com/photos/1779487/pexels-photo-1779487.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      technologies: ['Illustrator', 'Brand Strategy', 'Typography'],
-      type: 'image',
-      aspectRatio: 'aspect-square'
-    }
-  ];
+  const { projects, categories, loading, error, fetchProjectsByCategory } = useProjects();
+
+  // Transform projects to match the expected format
+  const transformedProjects = projects.map(project => ({
+    id: project.id,
+    title: project.title,
+    category: project.category_name,
+    description: project.description,
+    media: project.media_url,
+    technologies: project.technologies ? project.technologies.split(',') : [],
+    type: project.media_type,
+    aspectRatio: project.aspect_ratio,
+    external_url: project.external_url,
+    github_url: project.github_url
+  }));
 
   const filteredProjects = selectedCategory === 'All' 
-    ? projects 
-    : projects.filter(project => project.category === selectedCategory);
+    ? transformedProjects 
+    : transformedProjects.filter(project => project.category === selectedCategory);
+
+  // Handle category selection
+  const handleCategoryChange = async (category: string) => {
+    setSelectedCategory(category);
+    if (category !== 'All') {
+      const categoryObj = categories.find(cat => cat.name === category);
+      if (categoryObj) {
+        await fetchProjectsByCategory(categoryObj.id);
+      }
+    }
+  };
 
   const toggleVideoPlay = (videoId: number) => {
     setPlayingVideo(playingVideo === videoId ? null : videoId);
@@ -174,24 +98,73 @@ const Project = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
         >
+          <motion.button
+            onClick={() => handleCategoryChange('All')}
+            className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+              selectedCategory === 'All'
+                ? 'bg-gradient-to-r from-cyan-500 to-purple-600 text-white shadow-lg'
+                : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600'
+            }`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            All
+          </motion.button>
           {categories.map((category) => (
             <motion.button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
+              key={category.id}
+              onClick={() => handleCategoryChange(category.name)}
               className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
-                selectedCategory === category
+                selectedCategory === category.name
                   ? 'bg-gradient-to-r from-cyan-500 to-purple-600 text-white shadow-lg'
                   : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600'
               }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {category}
+              {category.name}
             </motion.button>
           ))}
         </motion.div>
 
+        {/* Loading State */}
+        {loading && (
+          <motion.div
+            className="flex justify-center items-center py-20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex items-center space-x-3">
+              <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+              <span className="text-xl text-slate-300">Loading projects...</span>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <motion.div
+            className="flex justify-center items-center py-20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="text-center">
+              <div className="text-red-400 text-xl mb-4">⚠️ Error loading projects</div>
+              <p className="text-slate-300 mb-4">{error}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-6 py-3 rounded-full font-medium hover:from-cyan-600 hover:to-purple-700 transition-all duration-300"
+              >
+                Retry
+              </button>
+            </div>
+          </motion.div>
+        )}
+
         {/* Media Gallery */}
+        {!loading && !error && (
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedCategory}
@@ -290,13 +263,30 @@ const Project = () => {
                           >
                             <Maximize2 className="h-4 w-4" />
                           </motion.button>
-                          <motion.button
+                          {project.external_url && (
+                            <motion.a
+                              href={project.external_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
                             className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors"
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                           >
                             <ExternalLink className="h-4 w-4" />
-                          </motion.button>
+                            </motion.a>
+                          )}
+                          {project.github_url && (
+                            <motion.a
+                              href={project.github_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors"
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                            >
+                              <Github className="h-4 w-4" />
+                            </motion.a>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -349,6 +339,7 @@ const Project = () => {
             ))}
           </motion.div>
         </AnimatePresence>
+        )}
 
         {/* Fullscreen Modal */}
         <AnimatePresence>

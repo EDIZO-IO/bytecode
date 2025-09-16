@@ -1,45 +1,35 @@
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Wifi, Cpu, Shield, Zap, Thermometer, Activity } from 'lucide-react';
+import { Wifi, Cpu, Shield, Zap, Thermometer, Activity, Loader2 } from 'lucide-react';
+import { useScrollToTop } from '../hooks/useScrollToTop';
+import { useProjects } from '../hooks/useProjects';
 
 const IOTProjects = () => {
-  const projects = [
-    {
-      id: 1,
-      title: 'Smart Home Automation System',
-      description: 'Complete IoT ecosystem for home automation with sensors, actuators, and mobile app control.',
-      technologies: ['Arduino', 'ESP32', 'React Native', 'MQTT', 'Node.js'],
-      features: ['Temperature control', 'Light automation', 'Security monitoring', 'Energy management'],
-      image: 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      category: 'Smart Home'
-    },
-    {
-      id: 2,
-      title: 'Industrial Sensor Network',
-      description: 'Real-time monitoring system for industrial equipment with predictive maintenance capabilities.',
-      technologies: ['Raspberry Pi', 'LoRaWAN', 'Python', 'InfluxDB', 'Grafana'],
-      features: ['Vibration analysis', 'Temperature monitoring', 'Predictive alerts', 'Data visualization'],
-      image: 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      category: 'Industrial IoT'
-    },
-    {
-      id: 3,
-      title: 'Environmental Monitoring Station',
-      description: 'Air quality and weather monitoring system with real-time data collection and analysis.',
-      technologies: ['ESP8266', 'Sensors', 'AWS IoT', 'DynamoDB', 'React'],
-      features: ['Air quality index', 'Weather data', 'Historical analysis', 'Alert system'],
-      image: 'https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      category: 'Environmental'
-    },
-    {
-      id: 4,
-      title: 'Smart Agriculture Solution',
-      description: 'Precision farming system with soil moisture, temperature, and crop health monitoring.',
-      technologies: ['Arduino', 'Sensors', 'LoRa', 'Machine Learning', 'Mobile App'],
-      features: ['Soil analysis', 'Irrigation control', 'Crop monitoring', 'Yield prediction'],
-      image: 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      category: 'Agriculture'
+  // Scroll to top when component mounts
+  useScrollToTop();
+
+  const { projects, categories, loading, error, fetchProjectsByCategory } = useProjects();
+
+  // Filter projects for IoT Projects category
+  useEffect(() => {
+    const iotCategory = categories.find(cat => cat.name === 'IoT Projects');
+    if (iotCategory) {
+      fetchProjectsByCategory(iotCategory.id);
     }
-  ];
+  }, [categories, fetchProjectsByCategory]);
+
+  // Transform projects to match the expected format
+  const transformedProjects = projects.map(project => ({
+    id: project.id,
+    title: project.title,
+    description: project.description,
+    technologies: project.technologies ? project.technologies.split(',') : [],
+    features: project.features ? project.features.split(',') : [],
+    image: project.media_url,
+    category: project.category_name,
+    external_url: project.external_url,
+    github_url: project.github_url
+  }));
 
 
   return (
@@ -107,8 +97,36 @@ const IOTProjects = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projects.map((project, index) => (
+          {/* Loading State */}
+          {loading && (
+            <div className="flex justify-center items-center py-20">
+              <div className="flex items-center space-x-3">
+                <Loader2 className="h-8 w-8 animate-spin text-green-400" />
+                <span className="text-xl text-slate-300">Loading IoT projects...</span>
+              </div>
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && (
+            <div className="flex justify-center items-center py-20">
+              <div className="text-center">
+                <div className="text-red-400 text-xl mb-4">⚠️ Error loading projects</div>
+                <p className="text-slate-300 mb-4">{error}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="bg-gradient-to-r from-green-500 to-blue-600 text-white px-6 py-3 rounded-full font-medium hover:from-green-600 hover:to-blue-700 transition-all duration-300"
+                >
+                  Retry
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Projects Grid */}
+          {!loading && !error && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {transformedProjects.map((project, index) => (
               <motion.div
                 key={project.id}
                 className="group relative bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl overflow-hidden hover:border-slate-600 transition-all duration-300"
@@ -168,8 +186,9 @@ const IOTProjects = () => {
                 {/* Hover Effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
               </motion.div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

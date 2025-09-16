@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Mail, Phone, GraduationCap, Building, Edit3, Save, X, Camera, Code } from 'lucide-react';
+import { useScrollToTop } from '../hooks/useScrollToTop';
 
 const Profile = () => {
+  // Scroll to top when component mounts
+  useScrollToTop();
+
   const [isEditing, setIsEditing] = useState(false);
   const [userDetails, setUserDetails] = useState({
     name: 'John Doe',

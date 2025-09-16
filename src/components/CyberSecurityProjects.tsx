@@ -1,48 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Lock, Eye, Zap, AlertTriangle, Key } from 'lucide-react';
+import { Shield, Lock, Eye, Zap, AlertTriangle, Key, Loader2 } from 'lucide-react';
+import { useScrollToTop } from '../hooks/useScrollToTop';
+import { useProjects } from '../hooks/useProjects';
 
 const CyberSecurityProjects = () => {
-  const projects = [
-    {
-      id: 1,
-      title: 'Network Security Scanner',
-      description: 'Automated vulnerability assessment tool that scans networks for security weaknesses and provides detailed reports.',
-      technologies: ['Python', 'Nmap', 'Nessus API', 'Django', 'PostgreSQL'],
-      features: ['Vulnerability detection', 'Risk assessment', 'Compliance reporting', 'Real-time monitoring'],
-      image: 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      category: 'Network Security'
-    },
-    {
-      id: 2,
-      title: 'Penetration Testing Framework',
-      description: 'Comprehensive security testing platform with automated tools and manual testing capabilities for web applications.',
-      technologies: ['Metasploit', 'Burp Suite', 'OWASP ZAP', 'React', 'Node.js'],
-      features: ['Automated scanning', 'Manual testing tools', 'Report generation', 'Vulnerability tracking'],
-      image: 'https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      category: 'Penetration Testing'
-    },
-    {
-      id: 3,
-      title: 'Security Information Management',
-      description: 'SIEM solution for collecting, analyzing, and responding to security events across your entire infrastructure.',
-      technologies: ['Elasticsearch', 'Logstash', 'Kibana', 'Python', 'Docker'],
-      features: ['Log aggregation', 'Threat detection', 'Incident response', 'Compliance monitoring'],
-      image: 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      category: 'SIEM'
-    },
-    {
-      id: 4,
-      title: 'Identity & Access Management',
-      description: 'Enterprise-grade IAM solution with multi-factor authentication, role-based access control, and audit logging.',
-      technologies: ['OAuth 2.0', 'SAML', 'JWT', 'React', 'Spring Boot'],
-      features: ['Multi-factor auth', 'Role management', 'Audit trails', 'Single sign-on'],
-      image: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      category: 'IAM'
-    }
-  ];
+  // Scroll to top when component mounts
+  useScrollToTop();
 
-  const categories = ['All', 'Network Security', 'Penetration Testing', 'SIEM', 'IAM'];
+  const { projects, categories, loading, error, fetchProjectsByCategory } = useProjects();
+
+  // Filter projects for Cybersecurity category
+  useEffect(() => {
+    const cyberSecurityCategory = categories.find(cat => cat.name === 'Cybersecurity');
+    if (cyberSecurityCategory) {
+      fetchProjectsByCategory(cyberSecurityCategory.id);
+    }
+  }, [categories, fetchProjectsByCategory]);
+
+  // Transform projects to match the expected format
+  const transformedProjects = projects.map(project => ({
+    id: project.id,
+    title: project.title,
+    description: project.description,
+    technologies: project.technologies ? project.technologies.split(',') : [],
+    features: project.features ? project.features.split(',') : [],
+    image: project.media_url,
+    category: project.category_name,
+    external_url: project.external_url,
+    github_url: project.github_url
+  }));
 
   return (
     <div className="min-h-screen bg-slate-900 text-white pt-20">
@@ -109,8 +96,36 @@ const CyberSecurityProjects = () => {
             </p>
           </motion.div>
 
+          {/* Loading State */}
+          {loading && (
+            <div className="flex justify-center items-center py-20">
+              <div className="flex items-center space-x-3">
+                <Loader2 className="h-8 w-8 animate-spin text-red-400" />
+                <span className="text-xl text-slate-300">Loading cybersecurity projects...</span>
+              </div>
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && (
+            <div className="flex justify-center items-center py-20">
+              <div className="text-center">
+                <div className="text-red-400 text-xl mb-4">⚠️ Error loading projects</div>
+                <p className="text-slate-300 mb-4">{error}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="bg-gradient-to-r from-red-500 to-orange-600 text-white px-6 py-3 rounded-full font-medium hover:from-red-600 hover:to-orange-700 transition-all duration-300"
+                >
+                  Retry
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Projects Grid */}
+          {!loading && !error && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projects.map((project, index) => (
+              {transformedProjects.map((project, index) => (
               <motion.div
                 key={project.id}
                 className="group relative bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl overflow-hidden hover:border-slate-600 transition-all duration-300"
@@ -170,8 +185,9 @@ const CyberSecurityProjects = () => {
                 {/* Hover Effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
               </motion.div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
